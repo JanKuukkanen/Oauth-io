@@ -41,62 +41,6 @@ io.adapter(socketIORedis({
 }));
 
 /**
- * Configuration for 'jarmo-socket.io'.
- */
-
-process.env.INSTANCE_NAME =
-	process.env.INSTANCE_NAME || process.env.HOSTNAME || 'unknown';
-
-io.use(require('jarmo-socket.io')({
-	/**
-	 * When clients are connected, report InfluxDB compliant payload to the
-	 * Jarmo service.
-	 */
-	onConnect: function(socket, numConn) {
-		return {
-			tags: {
-				version:  process.env.VERSION || 'unknown',
-				hostname: process.env.INSTANCE_NAME
-			},
-			fields: {
-				value: numConn
-			},
-			name: '' + process.env.INSTANCE_NAME + '.num_connection'
-		}
-	},
-
-	/**
-	 * When clients are disconnected, report InfluxDB compliant payload to the
-	 * Jarmo service.
-	 */
-	onDisconnect: function(socket, numConn, connDuration) {
-		return [{
-			tags: {
-				version:  process.env.VERSION || 'unknown',
-				hostname: process.env.INSTANCE_NAME
-			},
-			fields: {
-				value: numConn
-			},
-			name: '' + process.env.INSTANCE_NAME + '.num_connection'
-		}, {
-			tags: {
-				version:  process.env.VERSION || 'unknown',
-				hostname: process.env.INSTANCE_NAME
-			},
-			fields: {
-				value: connDuration
-			},
-			name: '' + process.env.INSTANCE_NAME + '.conn_duration'
-		}]
-	},
-
-	// General Jarmo configuration...
-	host: process.env.JARMO_HOST,
-	port: process.env.JARMO_PORT
-}));
-
-/**
  * Authenticate incoming requests.
  */
 io.use(function handshake(socket, next) {

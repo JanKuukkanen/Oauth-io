@@ -7,11 +7,11 @@ var config = require('../config');
 
 before(function() {
 	return nock(config.api).persist()
-		.get('/api/auth')
+		.get('/auth')
 			.replyWithFile(200, './test/mocks/user.json')
-		.get('/api/boards/found')
+		.get('/boards/found')
 			.replyWithFile(200, './test/mocks/board.json')
-		.get('/api/boards/notfound')
+		.get('/boards/notfound')
 			.reply(404);
 });
 
@@ -33,4 +33,3 @@ describe('Basic Usage', function() {
 	describe('Leaving a room',
 		require('./spec/leaving-a-room')(context));
 });
-
